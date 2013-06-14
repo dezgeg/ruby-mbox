@@ -28,44 +28,16 @@ class Mbox; class Mail
 
 class Headers
 	class Name
-		def self.parse (text)
-			return text if text.is_a? self
-
-			new(text)
-		end
-
-		def initialize (name)
-			name = name.to_s.downcase.gsub('-', '_').to_sym
+		def self.parse (name)
+			name = name.to_s.gsub('-', '_')
+			name.downcase!
 
 			if name.empty?
 				raise ArgumentError, 'cannot pass empty name'
 			end
 
-			@internal = name
+			return name.to_sym
 		end
-
-		def == (other)
-			to_sym == Name.parse(other).to_sym
-		end
-
-		alias eql? ==
-
-		def hash
-			to_sym.hash
-		end
-
-		def to_sym
-			@internal
-		end
-
-		memoize
-		def to_s
-			to_sym.to_s.downcase.gsub('_', '-').gsub(/(\A|-)(.)/) {|match|
-				match.upcase
-			}
-		end
-
-		alias to_str to_s
 	end
 
 	def self.parse (input)
