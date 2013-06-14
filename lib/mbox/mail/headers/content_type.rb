@@ -30,7 +30,7 @@ class ContentType
 
 		ContentType.new(Hash[stuff.map {|s|
 			s    = s.strip.split('=', 2)
-			s[0] = s[0].to_sym
+			s[0] = s[0].downcase.to_sym
 
 			if s[1][0] == '"' && s[1][s[1].length-1] == '"'
 				s[1] = s[1][1, s[1].length-2]
