@@ -36,7 +36,8 @@ class Content < Array
 		type    = headers[:content_type]
 
 		if type && type.mime && type.boundary && matches = type.mime.match(%r{multipart/(\w+)}i)
-			text.sub(/^.*?--#{type.boundary}\n/m, '').sub(/--#{type.boundary}--$/m, '').split("--#{type.boundary}\n").each {|part|
+			escaped = Regexp.escape(type.boundary)
+			text.sub(/^.*?--#{escaped}\n/m, '').sub(/--#{escaped}--$/m, '').split("--#{escaped}\n").each {|part|
 				stream = StringIO.new(part)
 
 				headers = ''
