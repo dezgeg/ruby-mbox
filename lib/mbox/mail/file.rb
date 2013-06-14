@@ -25,12 +25,12 @@ class File
 	attr_reader :name, :headers, :content
 
 	def initialize (headers, content)
-		if headers[:content_type] && headers[:content_type].charset
-			content.force_encoding headers[:content_type].charset
-		end
-
 		if headers[:content_transfer_encoding] == 'base64'
 			content = Base64.decode64(content)
+		end
+
+		if headers[:content_type] && headers[:content_type].charset
+			content.force_encoding headers[:content_type].charset
 		end
 
 		if matches = headers[:content_disposition].match(/filename="(.*?)"/) rescue nil
