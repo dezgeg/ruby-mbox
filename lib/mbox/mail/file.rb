@@ -30,7 +30,11 @@ class File
 		end
 
 		if headers[:content_type] && headers[:content_type].charset
-			content.force_encoding headers[:content_type].charset
+			begin
+				content.force_encoding headers[:content_type].charset
+			rescue ArgumentError
+				content.force_encoding "ISO-8859-1"
+			end
 		end
 
 		if matches = headers[:content_disposition].match(/filename="(.*?)"/) rescue nil
