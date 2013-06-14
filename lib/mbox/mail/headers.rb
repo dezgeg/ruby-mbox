@@ -133,23 +133,22 @@ class Headers
 		end
 
 		last = nil
+		last_value = nil
 
 		until input.eof? || (line = input.readline).chomp.empty?
 			if !line.match(/^\s/)
 				next unless matches = line.match(/^([\w\-]+):\s*(.+)$/)
+				self[last] = last_value if last
 
 				whole, name, value = matches.to_a
 
-				self[name] = value.strip
+				last_value = value.strip
 				last       = name
-			elsif last && self[last]
-				if self[last].is_a?(String)
-					self[last] << " #{line.strip}"
-				elsif self[last].is_a?(Array) && self[last].last.is_a?(String)
-					self[last].last << " #{line.strip}"
-				end
+			elsif last
+				last_value << " #{line.strip}"
 			end
 		end
+		self[last] = last_value if last
 
 		self
 	end
