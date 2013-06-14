@@ -47,7 +47,7 @@ class Content < Array
 				headers = Headers.parse(headers)
 
 				content = !stream.eof? ? stream.readline : ''
-				until stream.eof? || line = stream.readline
+				while !stream.eof? && line = stream.readline
 					content << line
 				end
 				content.chomp!
