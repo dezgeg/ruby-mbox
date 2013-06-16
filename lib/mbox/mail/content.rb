@@ -37,7 +37,7 @@ class Content < Array
 
 		if type && type.mime && type.boundary && matches = type.mime.match(%r{multipart/(\w+)}i)
 			escaped = Regexp.escape(type.boundary)
-			text.sub(/^.*?--#{escaped}\n/m, '').sub(/--#{escaped}--$/m, '').split("--#{escaped}\n").each {|part|
+			text.sub(/\A.*?--#{escaped}\n/m, '').sub(/^--#{escaped}--$.*/m, '').split(/^--#{escaped}\n/).each {|part|
 				stream = StringIO.new(part)
 
 				headers = ''
