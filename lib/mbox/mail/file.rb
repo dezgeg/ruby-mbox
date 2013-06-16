@@ -27,6 +27,8 @@ class File
 
 	def initialize (headers, content)
 		if headers[:content_transfer_encoding] == 'base64'
+			# Some crappy mailing lists append a signature even to Base64-encoded mails
+			content = content.sub(/^-- *$.*\Z/m, '')
 			content = Base64.decode64(content)
 		end
 
