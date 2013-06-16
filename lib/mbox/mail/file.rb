@@ -18,6 +18,7 @@
 #++
 
 require 'base64'
+require 'kconv'
 
 class Mbox; class Mail
 
@@ -35,6 +36,10 @@ class File
 			rescue ArgumentError
 				content.force_encoding "ISO-8859-1"
 			end
+		elsif Kconv.isutf8 content
+			content.force_encoding "UTF-8"
+		else
+			content.force_encoding "ISO-8859-1"
 		end
 
 		if matches = headers[:content_disposition].match(/filename="(.*?)"/) rescue nil
