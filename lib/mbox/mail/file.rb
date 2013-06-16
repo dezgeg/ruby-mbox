@@ -32,16 +32,17 @@ class File
 			content = Base64.decode64(content)
 		end
 
+		has_encoding = false
 		if headers[:content_type] && headers[:content_type].charset
 			begin
 				content.force_encoding headers[:content_type].charset
+				has_encoding = content.valid_encoding?
 			rescue ArgumentError
-				content.force_encoding "ISO-8859-1"
 			end
-		elsif Kconv.isutf8 content
-			content.force_encoding "UTF-8"
-		else
-			content.force_encoding "ISO-8859-1"
+		end
+
+		unless has_encoding
+			content.force_encoding(Kconv.isutf8(content) ? "UTF-8" : "ISO-8859-1")
 		end
 
 		if matches = headers[:content_disposition].match(/filename="(.*?)"/) rescue nil
